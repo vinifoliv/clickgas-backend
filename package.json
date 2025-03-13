@@ -1,0 +1,17 @@
+{
+  "name": "clickgas-backend",
+  "version": "1.0.0",
+  "main": "./src/main.js",
+  "scripts": {
+    "start": "node ./dist/main.js",
+    "dev": "tsx --watch ./src/main.ts"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "tsc": "^2.0.4",
+    "tsx": "^4.19.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
