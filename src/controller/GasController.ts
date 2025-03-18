@@ -8,21 +8,21 @@ gasController.post("/gas", async (req, res) => {
         res.status(400).send("Dados inválidos.");
         return;
     }
-    
-    // const gas: IGas = montarGas(req.body);
-    // const gasExiste = await clienteRepository.buscarPorPeso(gas.peso);
-    // if (!gasExiste) {
-    //     res.status(404).send("Gás não encontrado.");
-    //     return;
-    // }
 
-    // const gasCriado = await clienteRepository.cadastrar(gas);
-    // res.status(201).json(gasCriado);
+    const gas = montarGas(req.body);
+    const gasExiste = await gasRepository.buscarPorPeso(gas.peso);
+    if (!gasExiste) {
+        res.status(404).send("Gás não encontrado.");
+        return;
+    }
+
+    const gasCriado = await gasRepository.cadastrar(gas);
+    res.status(201).json(gasCriado);
 });
 
 gasController.get("/gas", async (_, res) => {
-    // const gases = await clienteRepository.buscar();
-    // res.status(200).json(gases);
+    const gases = await gasRepository.buscar();
+    res.status(200).json(gases);
 });
 
 gasController.put("/gas/:id", async (req, res) => {
@@ -31,42 +31,42 @@ gasController.put("/gas/:id", async (req, res) => {
         return;
     }
 
-    // const id = Number(req.params.id);
-    // const gas: IGas = montarGas(req.body);
-    // const gasExiste = await clienteRepository.buscarPorId(id);
-    // if (!gasExiste) {
-    //     res.status(404).send("Gás não encontrado.");
-    //     return;
-    // }
+    const id = Number(req.params.id);
+    const gas = montarGas(req.body);
+    const gasExiste = await gasRepository.buscarPorId(id);
+    if (!gasExiste) {
+        res.status(404).send("Gás não encontrado.");
+        return;
+    }
 
-    // const existePeso = await clienteRepository.buscarPorEmail(gas.peso);
-    // if (existePeso && existePeso.id !== id) {
-    //     res.status(422).send("Gás já cadastrado.");
-    //     return;
-    // }
+    const gasMesmoPeso = await gasRepository.buscarPorPeso(gas.peso);
+    if (gasMesmoPeso && gasMesmoPeso.id !== id) {
+        res.status(422).send("Gás já cadastrado.");
+        return;
+    }
 
-    // const gasAlterado = await clienteRepository.alterar(id, gas);
-    // res.status(200).json(gasAlterado);
+    const gasAlterado = await gasRepository.alterar(id, gas);
+    res.status(200).json(gasAlterado);
 });
 
 gasController.delete("/clientes/:id", async (req, res) => {
-    // const id = Number(req.params.id);
-    // const gasExiste = await clienteRepository.buscarPorId(id);
-    // if (!gasExiste) {
-    //     res.status(404).send("Gás não encontrado.");
-    //     return;
-    // }
+    const id = Number(req.params.id);
+    const gasExiste = await gasRepository.buscarPorId(id);
+    if (!gasExiste) {
+        res.status(404).send("Gás não encontrado.");
+        return;
+    }
 
-    // const gasExcluido = await clienteRepository.excluir(id);
-    // res.status(200).json(gasExcluido);
+    const gasExcluido = await gasRepository.excluir(id);
+    res.status(200).json(gasExcluido);
 });
 
-const gasValido = (cliente: any): boolean => {
-    if (!cliente.nome) return false;
-    if (!cliente.valor) return false;
-    if (!cliente.descricao) return false;
-    if (!cliente.peso) return false;
-    if (!cliente.icone) return false;
+const gasValido = (gas: any): boolean => {
+    if (!gas.nome) return false;
+    if (!gas.valor) return false;
+    if (!gas.descricao) return false;
+    if (!gas.peso) return false;
+    if (!gas.icone) return false;
     return true;
 };
 

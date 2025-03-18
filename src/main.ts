@@ -11,9 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(clienteController);
-app.use(formaPagamentoController)
-app.use(fornecedorController)
-app.use(gasController)
+app.use(formaPagamentoController);
+app.use(fornecedorController);
+app.use(gasController);
 
 app.listen(process.env.PORT, () => {
     console.info(`Servidor rodando na porta ${process.env.PORT}...`);

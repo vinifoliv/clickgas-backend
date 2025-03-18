@@ -8,7 +8,7 @@ clienteController.post("/clientes", async (req, res) => {
         res.status(400).send("Dados inválidos.");
         return;
     }
-    
+
     const cliente: ICliente = montarCliente(req.body);
     const clienteExiste = await clienteRepository.buscarPorEmail(cliente.email);
     if (!clienteExiste) {
@@ -19,6 +19,17 @@ clienteController.post("/clientes", async (req, res) => {
     const clienteCriado = await clienteRepository.cadastrar(cliente);
     res.status(201).json(clienteCriado);
 });
+
+clienteController.get("/clientes/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    const cliente = await clienteRepository.buscarPorId(id);
+    if (!cliente) {
+        res.status(404).send("Cliente não encontrado.");
+        return;
+    }
+
+    res.status(200).json(cliente);
+}); 
 
 clienteController.get("/clientes", async (_, res) => {
     const clientes = await clienteRepository.buscar();
@@ -32,7 +43,7 @@ clienteController.put("/clientes/:id", async (req, res) => {
     }
 
     const id = Number(req.params.id);
-    const cliente: ICliente = montarCliente(req.body);
+    const cliente = montarCliente(req.body);
     const clienteExiste = await clienteRepository.buscarPorId(id);
     if (!clienteExiste) {
         res.status(404).send("Cliente não encontrado.");

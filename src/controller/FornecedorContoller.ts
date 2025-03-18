@@ -8,21 +8,21 @@ fornecedorController.post("/fornecedores", async (req, res) => {
         res.status(400).send("Dados inválidos.");
         return;
     }
-    
-    // const fornecedor: IFornecedor = montarFornecedor(req.body);
-    // const fornecedorExiste = await clienteRepository.buscarPorEmail(fornecedor.email);
-    // if (!fornecedorExiste) {
-    //     res.status(404).send("fornecedor não encontrado.");
-    //     return;
-    // }
 
-    // const fornecedorCriado = await clienteRepository.cadastrar(fornecedor);
-    // res.status(201).json(fornecedorCriado);
+    const fornecedor = montarFornecedor(req.body);
+    const fornecedorExiste = await fornecedorRepository.buscarPorEmail(fornecedor.email);
+    if (!fornecedorExiste) {
+        res.status(404).send("Fornecedor não encontrado.");
+        return;
+    }
+
+    const fornecedorCriado = await fornecedorRepository.cadastrar(fornecedor);
+    res.status(201).json(fornecedorCriado);
 });
 
 fornecedorController.get("/fornecedores", async (_, res) => {
-    // const fornecedores = await clienteRepository.buscar();
-    // res.status(200).json(fornecedores);
+    const fornecedores = await fornecedorRepository.buscar();
+    res.status(200).json(fornecedores);
 });
 
 fornecedorController.put("/fornecedores/:id", async (req, res) => {
@@ -31,44 +31,44 @@ fornecedorController.put("/fornecedores/:id", async (req, res) => {
         return;
     }
 
-    // const id = Number(req.params.id);
-    // const fornecedor: IFornecedor = montarFornecedor(req.body);
-    // const fornecedorExiste = await clienteRepository.buscarPorId(id);
-    // if (!fornecedorExiste) {
-    //     res.status(404).send("fornecedor não encontrado.");
-    //     return;
-    // }
+    const id = Number(req.params.id);
+    const fornecedor = montarFornecedor(req.body);
+    const fornecedorExiste = await fornecedorRepository.buscarPorId(id);
+    if (!fornecedorExiste) {
+        res.status(404).send("Fornecedor não encontrado.");
+        return;
+    }
 
-    // const existeEmail = await clienteRepository.buscarPorEmail(fornecedor.email);
-    // if (existeEmail && existeEmail.id !== id) {
-    //     res.status(422).send("E-mail já cadastrado.");
-    //     return;
-    // }
+    const fornecedorMesmoEmail = await fornecedorRepository.buscarPorEmail(fornecedor.email);
+    if (fornecedorMesmoEmail && fornecedorMesmoEmail.id !== id) {
+        res.status(422).send("E-mail já cadastrado.");
+        return;
+    }
 
-    // const fornecedorAlterado = await clienteRepository.alterar(id, fornecedor);
-    // res.status(200).json(fornecedorAlterado);
+    const fornecedorAlterado = await fornecedorRepository.alterar(id, fornecedor);
+    res.status(200).json(fornecedorAlterado);
 });
 
 fornecedorController.delete("/fornecedores/:id", async (req, res) => {
-    // const id = Number(req.params.id);
-    // const fornecedorExiste = await clienteRepository.buscarPorId(id);
-    // if (!fornecedorControllerExiste) {
-    //     res.status(404).send("Fornecedor não encontrado.");
-    //     return;
-    // }
+    const id = Number(req.params.id);
+    const fornecedorExiste = await fornecedorRepository.buscarPorId(id);
+    if (!fornecedorExiste) {
+        res.status(404).send("Fornecedor não encontrado.");
+        return;
+    }
 
-    // const fornecedorExcluido = await clienteRepository.excluir(id);
-    // res.status(200).json(fornecedorExcluido);
+    const fornecedorExcluido = await fornecedorRepository.excluir(id);
+    res.status(200).json(fornecedorExcluido);
 });
 
-const fornecedorValido = (cliente: any): boolean => {
-    if (!cliente.razaoSocial) return false;
-    if (!cliente.email) return false;
-    if (!cliente.telefone) return false;
-    if (!cliente.cnpj) return false;
-    if (!cliente.endereco) return false;
-    if (!cliente.icone) return false;
-    if (!cliente.dataCadastro) return false;
+const fornecedorValido = (fornecedor: any): boolean => {
+    if (!fornecedor.razaoSocial) return false;
+    if (!fornecedor.email) return false;
+    if (!fornecedor.telefone) return false;
+    if (!fornecedor.cnpj) return false;
+    if (!fornecedor.endereco) return false;
+    if (!fornecedor.icone) return false;
+    if (!fornecedor.dataCadastro) return false;
     return true;
 };
 
