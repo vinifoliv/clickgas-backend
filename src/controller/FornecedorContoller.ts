@@ -25,6 +25,16 @@ fornecedorController.get("/fornecedores", async (_, res) => {
     res.status(200).json(fornecedores);
 });
 
+fornecedorController.get("/fornecedores/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    const fornecedor = await fornecedorRepository.buscarPorId(id);
+    if (!fornecedor) {
+        res.status(404).send("Fornecedor não encontrado.");
+        return;
+    }
+    res.status(200).json(fornecedor);
+});
+
 fornecedorController.put("/fornecedores/:id", async (req, res) => {
     if (!fornecedorValido(req.body)) {
         res.status(400).send("Dados inválidos.");

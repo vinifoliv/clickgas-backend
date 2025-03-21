@@ -27,9 +27,8 @@ clienteController.get("/clientes/:id", async (req, res) => {
         res.status(404).send("Cliente não encontrado.");
         return;
     }
-
     res.status(200).json(cliente);
-}); 
+});
 
 clienteController.get("/clientes", async (_, res) => {
     const clientes = await clienteRepository.buscar();

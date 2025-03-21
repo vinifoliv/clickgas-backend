@@ -25,6 +25,16 @@ gasController.get("/gas", async (_, res) => {
     res.status(200).json(gases);
 });
 
+gasController.get("/gas/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    const gases = await gasRepository.buscarPorId(id);
+    if(!gases) {
+        res.status(404).send("Gás não encontrado.");
+        return;
+    }
+    res.status(200).json(gases);
+});
+
 gasController.put("/gas/:id", async (req, res) => {
     if (!gasValido(req.body)) {
         res.status(400).send("Dados inválidos.");
