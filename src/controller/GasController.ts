@@ -10,25 +10,25 @@ gasController.post("/gas", async (req, res) => {
     }
 
     const gas = montarGas(req.body);
-    const gasExiste = await gasRepository.buscarPorPeso(gas.peso);
+    const gasExiste = await gasModel.buscarPorPeso(gas.peso);
     if (!gasExiste) {
         res.status(404).send("Gás não encontrado.");
         return;
     }
 
-    const gasCriado = await gasRepository.cadastrar(gas);
+    const gasCriado = await gasModel.cadastrar(gas);
     res.status(201).json(gasCriado);
 });
 
 gasController.get("/gas", async (_, res) => {
-    const gases = await gasRepository.buscar();
+    const gases = await gasModel.buscar();
     res.status(200).json(gases);
 });
 
 gasController.get("/gas/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const gases = await gasRepository.buscarPorId(id);
-    if(!gases) {
+    const gases = await gasModel.buscarPorId(id);
+    if (!gases) {
         res.status(404).send("Gás não encontrado.");
         return;
     }
@@ -43,31 +43,31 @@ gasController.put("/gas/:id", async (req, res) => {
 
     const id = Number(req.params.id);
     const gas = montarGas(req.body);
-    const gasExiste = await gasRepository.buscarPorId(id);
+    const gasExiste = await gasModel.buscarPorId(id);
     if (!gasExiste) {
         res.status(404).send("Gás não encontrado.");
         return;
     }
 
-    const gasMesmoPeso = await gasRepository.buscarPorPeso(gas.peso);
+    const gasMesmoPeso = await gasModel.buscarPorPeso(gas.peso);
     if (gasMesmoPeso && gasMesmoPeso.id !== id) {
         res.status(422).send("Gás já cadastrado.");
         return;
     }
 
-    const gasAlterado = await gasRepository.alterar(id, gas);
+    const gasAlterado = await gasModel.alterar(id, gas);
     res.status(200).json(gasAlterado);
 });
 
 gasController.delete("/clientes/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const gasExiste = await gasRepository.buscarPorId(id);
+    const gasExiste = await gasModel.buscarPorId(id);
     if (!gasExiste) {
         res.status(404).send("Gás não encontrado.");
         return;
     }
 
-    const gasExcluido = await gasRepository.excluir(id);
+    const gasExcluido = await gasModel.excluir(id);
     res.status(200).json(gasExcluido);
 });
 

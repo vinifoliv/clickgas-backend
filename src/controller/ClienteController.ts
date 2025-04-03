@@ -10,19 +10,19 @@ clienteController.post("/clientes", async (req, res) => {
     }
 
     const cliente: ICliente = montarCliente(req.body);
-    const clienteExiste = await clienteRepository.buscarPorEmail(cliente.email);
+    const clienteExiste = await clienteModel.buscarPorEmail(cliente.email);
     if (!clienteExiste) {
         res.status(404).send("Cliente não encontrado.");
         return;
     }
 
-    const clienteCriado = await clienteRepository.cadastrar(cliente);
+    const clienteCriado = await clienteModel.cadastrar(cliente);
     res.status(201).json(clienteCriado);
 });
 
 clienteController.get("/clientes/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const cliente = await clienteRepository.buscarPorId(id);
+    const cliente = await clienteModel.buscarPorId(id);
     if (!cliente) {
         res.status(404).send("Cliente não encontrado.");
         return;
@@ -31,7 +31,7 @@ clienteController.get("/clientes/:id", async (req, res) => {
 });
 
 clienteController.get("/clientes", async (_, res) => {
-    const clientes = await clienteRepository.buscar();
+    const clientes = await clienteModel.buscar();
     res.status(200).json(clientes);
 });
 
@@ -43,31 +43,31 @@ clienteController.put("/clientes/:id", async (req, res) => {
 
     const id = Number(req.params.id);
     const cliente = montarCliente(req.body);
-    const clienteExiste = await clienteRepository.buscarPorId(id);
+    const clienteExiste = await clienteModel.buscarPorId(id);
     if (!clienteExiste) {
         res.status(404).send("Cliente não encontrado.");
         return;
     }
 
-    const existeEmail = await clienteRepository.buscarPorEmail(cliente.email);
+    const existeEmail = await clienteModel.buscarPorEmail(cliente.email);
     if (existeEmail && existeEmail.id !== id) {
         res.status(422).send("E-mail já cadastrado.");
         return;
     }
 
-    const clienteAlterado = await clienteRepository.alterar(id, cliente);
+    const clienteAlterado = await clienteModel.alterar(id, cliente);
     res.status(200).json(clienteAlterado);
 });
 
 clienteController.delete("/clientes/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const clienteExiste = await clienteRepository.buscarPorId(id);
+    const clienteExiste = await clienteModel.buscarPorId(id);
     if (!clienteExiste) {
         res.status(404).send("Cliente não encontrado.");
         return;
     }
 
-    const clienteExcluido = await clienteRepository.excluir(id);
+    const clienteExcluido = await clienteModel.excluir(id);
     res.status(200).json(clienteExcluido);
 });
 

@@ -8,18 +8,18 @@ vendaController.post("/vendas", async (req, res) => {
         return;
     }
     const venda = req.body;
-    const vendaCriada = await vendaRepository.criar(venda);
+    const vendaCriada = await vendaModel.criar(venda);
     res.status(201).json(vendaCriada);
 });
 
 vendaController.get("/vendas", async (_, res) => {
-    const vendas = await vendaRepository.buscar();
+    const vendas = await vendaModel.buscar();
     res.status(200).json(vendas);
 });
 
 vendaController.get("/vendas/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const venda = await vendaRepository.buscarPorId(id);
+    const venda = await vendaModel.buscarPorId(id);
     if (!venda) {
         res.status(404).send("Venda não encontrada.");
         return;
@@ -34,24 +34,24 @@ vendaController.put("/vendas/:id", async (req, res) => {
         return;
     }
 
-    const vendaExiste = await vendaRepository.buscarPorId(id);
+    const vendaExiste = await vendaModel.buscarPorId(id);
     if (!vendaExiste) {
         res.status(404).send("Venda não encontrada.");
         return;
     }
 
-    const vendaAtualizada = await vendaRepository.atualizar(id);
+    const vendaAtualizada = await vendaModel.atualizar(id);
     res.status(200).json(vendaAtualizada);
 });
 
 vendaController.delete("/vendas/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const vendaExiste = await vendaRepository.buscarPorId(id);
+    const vendaExiste = await vendaModel.buscarPorId(id);
     if (!vendaExiste) {
         res.status(404).send("Venda não encontrada.");
         return;
     }
-    const vendaExcluida = await vendaRepository.excluir();
+    const vendaExcluida = await vendaModel.excluir();
     res.status(200).json(vendaExcluida);
 });
 

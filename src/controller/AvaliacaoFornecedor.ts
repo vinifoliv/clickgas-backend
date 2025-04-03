@@ -8,18 +8,18 @@ avaliacaoFornecedorController.post("/avaliacoes-fornecedor", async (req, res) =>
     return;
   }
   const avaliacao = montarAvaliacaoFornecedor(req.body);
-  const avaliacaoCriada = await avaliacaoFornecedorRepository.criar(avaliacao);
+  const avaliacaoCriada = await avaliacaoFornecedorModel.criar(avaliacao);
   res.status(200).json(avaliacaoCriada);
 });
 
 avaliacaoFornecedorController.get("/avaliacoes-fornecedor", async (_, res) => {
-  const avaliacoes = await avaliacaoFornecedorRepository.buscar();
+  const avaliacoes = await avaliacaoFornecedorModel.buscar();
   res.status(200).json(avaliacoes);
 });
 
 avaliacaoFornecedorController.get("/avaliacoes-fornecedor/:id", async (req, res) => {
   const id = Number(req.params.id);
-  const avaliacao = await avaliacaoFornecedorRepository.buscarPorId(id);
+  const avaliacao = await avaliacaoFornecedorModel.buscarPorId(id);
   if (!avaliacao) {
     res.status(404).send("Avaliação não encontrada.");
     return;
@@ -35,31 +35,31 @@ avaliacaoFornecedorController.put("/avaliacoes-fornecedor/:id", async (req, res)
 
   const id = Number(req.params.id);
   const avaliacao = montarAvaliacaoFornecedor(req.body);
-  const avaliacaoExiste = await avaliacaoFornecedorRepository.buscarPorId(id);
+  const avaliacaoExiste = await avaliacaoFornecedorModel.buscarPorId(id);
   if (!avaliacaoExiste) {
     res.status(404).send("Avaliação não encontrada.");
     return;
   }
 
-  const avaliacaoMesmoFornecedor = await avaliacaoFornecedorRepository.buscarPorClienteIdEFornecedorId(avaliacao.clienteId, avaliacao.fornecedorId);
+  const avaliacaoMesmoFornecedor = await avaliacaoFornecedorModel.buscarPorClienteIdEFornecedorId(avaliacao.clienteId, avaliacao.fornecedorId);
   if (avaliacaoMesmoFornecedor && avaliacaoMesmoFornecedor.id !== id) {
     res.status(409).send("Avaliação para esse fornecedor já existe.");
     return;
   }
-  const avaliacaoAtualizada = await avaliacaoFornecedorRepository.atualizar(avaliacao);
+  const avaliacaoAtualizada = await avaliacaoFornecedorModel.atualizar(avaliacao);
   res.status(200).json(avaliacaoAtualizada);
 });
 
 avaliacaoFornecedorController.delete("/avaliacoes-fornecedor/:id", async (req, res) => {
   const id = Number(req.params.id);
-  const avaliacaoExiste = await avaliacaoFornecedorRepository.buscarPorId(id);
-    if (!avaliacaoExiste) {
-        res.status(404).send("Avaliação não encontrada.");
-        return;
-    }
+  const avaliacaoExiste = await avaliacaoFornecedorModel.buscarPorId(id);
+  if (!avaliacaoExiste) {
+    res.status(404).send("Avaliação não encontrada.");
+    return;
+  }
 
-    const avaliacaoExcluida = await avaliacaoFornecedorRepository.excluir(id);
-    res.status(200).json(avaliacaoExcluida);
+  const avaliacaoExcluida = await avaliacaoFornecedorModel.excluir(id);
+  res.status(200).json(avaliacaoExcluida);
 });
 
 

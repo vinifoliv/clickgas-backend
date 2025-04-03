@@ -10,18 +10,18 @@ formaPagamentoController.post("/forma-pagamento", async (req, res) => {
     }
 
     const formaPagamento = montarFormaPagamento(req.body);
-    const formaPagamentoExiste = await formaPagamentoRepository.buscarPorNome(formaPagamento.nome);
+    const formaPagamentoExiste = await formaPagamentoModel.buscarPorNome(formaPagamento.nome);
     if (!formaPagamentoExiste) {
         res.status(404).send("Forma de pagamento não encontrada.");
         return;
     }
 
-    const formaPagamentoCriada = await formaPagamentoRepository.cadastrar(formaPagamento);
+    const formaPagamentoCriada = await formaPagamentoModel.cadastrar(formaPagamento);
     res.status(201).json(formaPagamentoCriada);
 });
 
 formaPagamentoController.get("/forma-pagamento", async (_, res) => {
-    const formasPagamento = await formaPagamentoRepository.buscar();
+    const formasPagamento = await formaPagamentoModel.buscar();
     res.status(200).json(formasPagamento);
 });
 
@@ -33,31 +33,31 @@ formaPagamentoController.put("/forma-pagamento/:id", async (req, res) => {
 
     const id = Number(req.params.id);
     const formaPagamento = montarFormaPagamento(req.body);
-    const formaPagamentoExiste = await formaPagamentoRepository.buscarPorId(id);
+    const formaPagamentoExiste = await formaPagamentoModel.buscarPorId(id);
     if (!formaPagamentoExiste) {
         res.status(404).send("Forma de pagamento não encontrada.");
         return;
     }
 
-    const formaPagamentoMesmoNome = await formaPagamentoRepository.buscarPorNome(formaPagamento.nome);
+    const formaPagamentoMesmoNome = await formaPagamentoModel.buscarPorNome(formaPagamento.nome);
     if (formaPagamentoMesmoNome && formaPagamentoMesmoNome.id !== id) {
         res.status(422).send("Forma de pagamento já cadastrada.");
         return;
     }
 
-    const formaPagamentoAlterada = await formaPagamentoRepository.alterar(id, formaPagamento);
+    const formaPagamentoAlterada = await formaPagamentoModel.alterar(id, formaPagamento);
     res.status(200).json(formaPagamentoAlterada);
 });
 
 formaPagamentoController.delete("/forma-pagamento/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const formaPagamentoExiste = await formaPagamentoRepository.buscarPorId(id);
+    const formaPagamentoExiste = await formaPagamentoModel.buscarPorId(id);
     if (!formaPagamentoExiste) {
         res.status(404).send("Forma de pagamento não encontrada.");
         return;
     }
 
-    const formaPagamentoExcluida = await formaPagamentoRepository.excluir(id);
+    const formaPagamentoExcluida = await formaPagamentoModel.excluir(id);
     res.status(200).json(formaPagamentoExcluida);
 });
 
