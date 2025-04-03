@@ -1,4 +1,5 @@
 export interface IVenda {
+    readonly id?: number;
     readonly fornecedorId: number;
     readonly clienteId: number;
     readonly gasId: number;

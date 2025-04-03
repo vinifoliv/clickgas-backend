@@ -1,4 +1,5 @@
 export interface IFornecedor {
+    readonly id?: number;
     readonly razaoSocial: number;
     readonly email: string;
     readonly telefone: number;
