@@ -16,7 +16,7 @@ fornecedorController.post("/fornecedores", async (req, res) => {
         return;
     }
 
-    const fornecedorCriado = await fornecedorModel.cadastrar(fornecedor);
+    const fornecedorCriado = await fornecedorModel.criar(fornecedor);
     res.status(201).json(fornecedorCriado);
 });
 

@@ -16,7 +16,7 @@ gasController.post("/gas", async (req, res) => {
         return;
     }
 
-    const gasCriado = await gasModel.cadastrar(gas);
+    const gasCriado = await gasModel.criar(gas);
     res.status(201).json(gasCriado);
 });
 

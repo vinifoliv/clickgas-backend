@@ -16,7 +16,7 @@ formaPagamentoController.post("/forma-pagamento", async (req, res) => {
         return;
     }
 
-    const formaPagamentoCriada = await formaPagamentoModel.cadastrar(formaPagamento);
+    const formaPagamentoCriada = await formaPagamentoModel.criar(formaPagamento);
     res.status(201).json(formaPagamentoCriada);
 });
 

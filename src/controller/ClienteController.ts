@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { ICliente } from "../interface/ICliente";
+import { clienteModel } from "../main";
 
-export const clienteController = Router();
+const clienteController = Router();
 
 clienteController.post("/clientes", async (req, res) => {
     if (!clienteValido(req.body)) {
@@ -9,14 +10,14 @@ clienteController.post("/clientes", async (req, res) => {
         return;
     }
 
-    const cliente: ICliente = montarCliente(req.body);
+    const cliente = montarCliente(req.body);
     const clienteExiste = await clienteModel.buscarPorEmail(cliente.email);
-    if (!clienteExiste) {
-        res.status(404).send("Cliente não encontrado.");
+    if (clienteExiste) {
+        res.status(404).send("Cliente já cadastrado .");
         return;
     }
 
-    const clienteCriado = await clienteModel.cadastrar(cliente);
+    const clienteCriado = await clienteModel.criar(cliente);
     res.status(201).json(clienteCriado);
 });
 
@@ -75,10 +76,6 @@ const clienteValido = (cliente: any): boolean => {
     if (!cliente.nome) return false;
     if (!cliente.email) return false;
     if (!cliente.senha) return false;
-    if (!cliente.telefone) return false;
-    if (!cliente.endereco) return false;
-    if (!cliente.icone) return false;
-    if (!cliente.dataNascimento) return false;
     return true;
 };
 
@@ -87,9 +84,10 @@ const montarCliente = (body: any): ICliente => {
         nome: body.nome,
         email: body.email,
         senha: body.senha,
-        telefone: Number(body.telefone),
-        endereco: body.endereco,
-        icone: body.icone,
-        dataNascimento: new Date(body.dataNascimento)
+        telefone: body.telefone || null,
+        endereco: body.endereco || null,
+        icone: body.icone || null,
     };
 }
+
+export { clienteController };
