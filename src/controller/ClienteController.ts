@@ -13,7 +13,7 @@ clienteController.post("/clientes", async (req, res) => {
     const cliente = montarCliente(req.body);
     const clienteExiste = await clienteModel.buscarPorEmail(cliente.email);
     if (clienteExiste) {
-        res.status(404).send("Cliente já cadastrado .");
+        res.status(400).send("Cliente já cadastrado .");
         return;
     }
 

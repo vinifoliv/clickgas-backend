@@ -59,7 +59,7 @@ model gas {
   nome           String           @db.VarChar(255)
   valor          Decimal          @db.Decimal(5, 2)
   descricao      String?          @db.VarChar(255)
-  peso           Decimal          @db.Decimal(3, 2)
+  peso           Decimal          @db.Decimal(5, 2)
   icone          String?          @db.VarChar(255)
   data_cadastro  DateTime         @default(now()) @db.Timestamp(0)
   gas_fornecedor gas_fornecedor[]

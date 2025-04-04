@@ -1,11 +1,10 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { ICliente } from "../interface/ICliente";
-import { DefaultArgs } from "@prisma/client/runtime/library";
 
 export class ClienteModel {
     private readonly db: PrismaClient
 
-    constructor(db: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>) {
+    constructor(db: PrismaClient) {
         this.db = db;
     }
 

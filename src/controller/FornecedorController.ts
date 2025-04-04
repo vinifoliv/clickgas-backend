@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { IFornecedor } from "../interface/IFornecedor";
+import { fornecedorModel } from "../main";
 
-export const fornecedorController = Router();
+const fornecedorController = Router();
 
 fornecedorController.post("/fornecedores", async (req, res) => {
     if (!fornecedorValido(req.body)) {
@@ -11,8 +12,8 @@ fornecedorController.post("/fornecedores", async (req, res) => {
 
     const fornecedor = montarFornecedor(req.body);
     const fornecedorExiste = await fornecedorModel.buscarPorEmail(fornecedor.email);
-    if (!fornecedorExiste) {
-        res.status(404).send("Fornecedor não encontrado.");
+    if (fornecedorExiste) {
+        res.status(400).send("Fornecedor já cadastrado.");
         return;
     }
 
@@ -76,9 +77,6 @@ const fornecedorValido = (fornecedor: any): boolean => {
     if (!fornecedor.email) return false;
     if (!fornecedor.telefone) return false;
     if (!fornecedor.cnpj) return false;
-    if (!fornecedor.endereco) return false;
-    if (!fornecedor.icone) return false;
-    if (!fornecedor.dataCadastro) return false;
     return true;
 };
 
@@ -86,10 +84,11 @@ const montarFornecedor = (body: any): IFornecedor => {
     return {
         razaoSocial: body.razaoSocial,
         email: body.email,
-        telefone: Number(body.telefone),
-        cnpj: Number(body.cnpj),
+        telefone: body.telefone,
+        cnpj: body.cnpj,
         endereco: body.endereco,
         icone: body.icone,
-        dataCadastro: new Date(body.dataNascimento)
     };
 }
+
+export { fornecedorController };

@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { IGas } from "../interface/IGas";
+import { gasModel } from "../main";
 
-export const gasController = Router();
+const gasController = Router();
 
 gasController.post("/gas", async (req, res) => {
     if (!gasValido(req.body)) {
@@ -11,8 +12,8 @@ gasController.post("/gas", async (req, res) => {
 
     const gas = montarGas(req.body);
     const gasExiste = await gasModel.buscarPorPeso(gas.peso);
-    if (!gasExiste) {
-        res.status(404).send("Gás não encontrado.");
+    if (gasExiste) {
+        res.status(400).send("Gás já cadastrado.");
         return;
     }
 
@@ -27,12 +28,12 @@ gasController.get("/gas", async (_, res) => {
 
 gasController.get("/gas/:id", async (req, res) => {
     const id = Number(req.params.id);
-    const gases = await gasModel.buscarPorId(id);
-    if (!gases) {
+    const gas = await gasModel.buscarPorId(id);
+    if (!gas) {
         res.status(404).send("Gás não encontrado.");
         return;
     }
-    res.status(200).json(gases);
+    res.status(200).json(gas);
 });
 
 gasController.put("/gas/:id", async (req, res) => {
@@ -59,7 +60,7 @@ gasController.put("/gas/:id", async (req, res) => {
     res.status(200).json(gasAlterado);
 });
 
-gasController.delete("/clientes/:id", async (req, res) => {
+gasController.delete("/gas/:id", async (req, res) => {
     const id = Number(req.params.id);
     const gasExiste = await gasModel.buscarPorId(id);
     if (!gasExiste) {
@@ -74,9 +75,7 @@ gasController.delete("/clientes/:id", async (req, res) => {
 const gasValido = (gas: any): boolean => {
     if (!gas.nome) return false;
     if (!gas.valor) return false;
-    if (!gas.descricao) return false;
     if (!gas.peso) return false;
-    if (!gas.icone) return false;
     return true;
 };
 
@@ -89,3 +88,5 @@ const montarGas = (body: any): IGas => {
         icone: body.icone,
     };
 }
+
+export { gasController }
