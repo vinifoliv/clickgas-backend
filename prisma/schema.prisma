@@ -68,7 +68,7 @@ model gas {
 
 model gas_fornecedor {
   id            Int         @id @default(autoincrement())
-  bloqueado     Int?
+  bloqueado     Boolean
   id_fornecedor Int?
   id_gas        Int?
   fornecedor    fornecedor? @relation(fields: [id_fornecedor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "gas_fornecedor_ibfk_1")
