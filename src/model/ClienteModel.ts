@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { ICliente } from "../interface/ICliente";
 
 export class ClienteModel {
-    private readonly db: PrismaClient
+    private readonly db: PrismaClient;
 
     constructor(db: PrismaClient) {
         this.db = db;
@@ -17,7 +17,7 @@ export class ClienteModel {
                 endereco: dados.endereco,
                 telefone: dados.telefone,
                 icone: dados.icone,
-            }
+            },
         });
         return this.remodelar(cliente);
     }
@@ -32,7 +32,7 @@ export class ClienteModel {
                 endereco: dados.endereco,
                 telefone: dados.telefone,
                 icone: dados.icone,
-            }
+            },
         });
         return this.remodelar(cliente);
     }
@@ -44,15 +44,15 @@ export class ClienteModel {
 
     public async buscarPorId(id: number): Promise<ICliente | null> {
         const cliente = await this.db.clientes.findUnique({
-            where: { id }
+            where: { id },
         });
         return cliente ? this.remodelar(cliente) : null;
     }
 
     public async buscarPorEmail(email: string): Promise<ICliente | null> {
         const cliente = await this.db.clientes.findUnique({
-            where: { email }
-        })
+            where: { email },
+        });
         if (!cliente) return null;
         return this.remodelar(cliente);
     }

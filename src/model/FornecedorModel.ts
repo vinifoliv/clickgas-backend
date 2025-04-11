@@ -17,7 +17,7 @@ export class FornecedorModel {
                 telefone: dados.telefone,
                 endereco: dados.endereco,
                 icone: dados.icone,
-            }
+            },
         });
         return this.remodelar(fornecedor);
     }
@@ -32,7 +32,7 @@ export class FornecedorModel {
                 telefone: dados.telefone,
                 endereco: dados.endereco,
                 icone: dados.icone,
-            }
+            },
         });
         return this.remodelar(fornecedor);
     }
