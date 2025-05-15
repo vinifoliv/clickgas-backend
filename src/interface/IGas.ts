@@ -1,7 +1,9 @@
 export interface IGas {
+    readonly id?: number;
     readonly nome: string;
     readonly valor: number;
-    readonly descricao: string;
+    readonly descricao: string | null;
     readonly peso: number;
-    readonly icone: string;
+    readonly icone: string | null;
+    readonly dataCadastro?: Date;
 }

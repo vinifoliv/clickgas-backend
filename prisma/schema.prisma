@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model avaliacoes_fornecedor {
+  id            Int         @id @default(autoincrement())
+  avaliacao     Decimal?    @db.Decimal(2, 2)
+  data_cadastro DateTime    @default(now()) @db.Timestamp(0)
+  id_fornecedor Int?
+  id_clientes   Int?
+  fornecedor    fornecedor? @relation(fields: [id_fornecedor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "avaliacoes_fornecedor_ibfk_1")
+  clientes      clientes?   @relation(fields: [id_clientes], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "avaliacoes_fornecedor_ibfk_2")
+
+  @@index([id_clientes], map: "id_clientes")
+  @@index([id_fornecedor], map: "id_fornecedor")
+}
+
+model clientes {
+  id                    Int                     @id @default(autoincrement())
+  nome                  String                  @db.VarChar(100)
+  email                 String                  @unique(map: "email") @db.VarChar(255)
+  senha                 String                  @db.VarChar(255)
+  telefone              String?                 @db.VarChar(20)
+  endereco              String?                 @db.VarChar(255)
+  icone                 String?                 @db.VarChar(255)
+  data_cadastro         DateTime                @default(now()) @db.Timestamp(0)
+  avaliacoes_fornecedor avaliacoes_fornecedor[]
+  venda                 venda[]
+}
+
+model forma_pagamento {
+  id        Int         @id @default(autoincrement())
+  nome      String      @db.VarChar(255)
+  icone     String?     @db.VarChar(255)
+  pagamento pagamento[]
+}
+
+model fornecedor {
+  id                    Int                     @id @default(autoincrement())
+  razao_social          String                  @unique(map: "razao_social") @db.VarChar(255)
+  email                 String                  @unique(map: "email") @db.VarChar(255)
+  telefone              String                  @db.VarChar(20)
+  cnpj                  String                  @unique(map: "cnpj") @db.Char(14)
+  endereco              String?                 @db.VarChar(255)
+  icone                 String?                 @db.VarChar(255)
+  data_cadastro         DateTime                @default(now()) @db.Timestamp(0)
+  avaliacoes_fornecedor avaliacoes_fornecedor[]
+  gas_fornecedor        gas_fornecedor[]
+  venda                 venda[]
+}
+
+model gas {
+  id             Int              @id @default(autoincrement())
+  nome           String           @db.VarChar(255)
+  valor          Decimal          @db.Decimal(5, 2)
+  descricao      String?          @db.VarChar(255)
+  peso           Decimal          @db.Decimal(5, 2)
+  icone          String?          @db.VarChar(255)
+  data_cadastro  DateTime         @default(now()) @db.Timestamp(0)
+  gas_fornecedor gas_fornecedor[]
+  venda          venda[]
+}
+
+model gas_fornecedor {
+  id            Int         @id @default(autoincrement())
+  bloqueado     Boolean
+  id_fornecedor Int?
+  id_gas        Int?
+  fornecedor    fornecedor? @relation(fields: [id_fornecedor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "gas_fornecedor_ibfk_1")
+  gas           gas?        @relation(fields: [id_gas], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "gas_fornecedor_ibfk_2")
+
+  @@index([id_fornecedor], map: "id_fornecedor")
+  @@index([id_gas], map: "id_gas")
+}
+
+model pagamento {
+  id                 Int              @id @default(autoincrement())
+  id_forma_pagamento Int?
+  forma_pagamento    forma_pagamento? @relation(fields: [id_forma_pagamento], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "pagamento_ibfk_1")
+  venda              venda[]
+
+  @@index([id_forma_pagamento], map: "id_forma_pagamento")
+}
+
+model venda {
+  id            Int         @id @default(autoincrement())
+  quantidade    Int
+  valor_total   Decimal     @db.Decimal(5, 2)
+  data_cadastro DateTime    @default(now()) @db.Timestamp(0)
+  id_fornecedor Int?
+  id_clientes   Int?
+  id_gas        Int?
+  id_pagamento  Int?
+  fornecedor    fornecedor? @relation(fields: [id_fornecedor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "venda_ibfk_1")
+  clientes      clientes?   @relation(fields: [id_clientes], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "venda_ibfk_2")
+  gas           gas?        @relation(fields: [id_gas], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "venda_ibfk_3")
+  pagamento     pagamento?  @relation(fields: [id_pagamento], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "venda_ibfk_4")
+
+  @@index([id_clientes], map: "id_clientes")
+  @@index([id_fornecedor], map: "id_fornecedor")
+  @@index([id_gas], map: "id_gas")
+  @@index([id_pagamento], map: "id_pagamento")
+}

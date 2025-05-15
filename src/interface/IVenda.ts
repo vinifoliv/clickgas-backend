@@ -1,8 +1,9 @@
 export interface IVenda {
-    readonly fornecedorId: number;
-    readonly clienteId: number;
-    readonly gasId: number;
-    readonly formaPagamentoId: number;
+    readonly id?: number;
+    readonly fornecedorId: number | null;
+    readonly clienteId: number | null;
+    readonly gasId: number | null;
+    readonly pagamentoId: number | null;
     readonly quantidade: number;
     readonly valorTotal: number;
     readonly dataCadastro: Date;

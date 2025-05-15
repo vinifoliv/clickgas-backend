@@ -1,66 +1,75 @@
-import { Router } from "express";
+import { Express } from "express";
+import { VendaModel } from "../model/VendaModel";
 
-export const vendaController = Router();
+export class VendaController {
+    constructor(
+        private readonly httpServer: Express,
+        private readonly vendaModel: VendaModel
+    ) {
+        this.httpServer.post("/vendas", async (req, res) => {
+            if (!this.vendaEhValida(req.body)) {
+                res.status(400).send("Dados inválidos.");
+                return;
+            }
+            const venda = req.body;
+            const vendaCriada = await this.vendaModel.criar(venda);
+            res.status(201).json(vendaCriada);
+        });
 
-vendaController.post("/vendas", async (req, res) => {
-    if (!vendaEhValida(req.body)) {
-        res.status(400).send("Dados inválidos.");
-        return;
+        this.httpServer.get("/vendas", async (_, res) => {
+            const vendas = await vendaModel.buscar();
+            res.status(200).json(vendas);
+        });
+
+        this.httpServer.get("/vendas/:id", async (req, res) => {
+            const id = Number(req.params.id);
+            const venda = await this.vendaModel.buscarPorId(id);
+            if (!venda) {
+                res.status(404).send("Venda não encontrada.");
+                return;
+            }
+            res.status(200).json(venda);
+        });
+
+        this.httpServer.put("/vendas/:id", async (req, res) => {
+            const id = Number(req.params.id);
+            if (!this.vendaEhValida(req.body)) {
+                res.status(400).send("Dados inválidos.");
+                return;
+            }
+
+            const vendaExiste = await this.vendaModel.buscarPorId(id);
+            if (!vendaExiste) {
+                res.status(404).send("Venda não encontrada.");
+                return;
+            }
+
+            const vendaAtualizada = await this.vendaModel.atualizar(
+                id,
+                req.body
+            );
+            res.status(200).json(vendaAtualizada);
+        });
+
+        this.httpServer.delete("/vendas/:id", async (req, res) => {
+            const id = Number(req.params.id);
+            const vendaExiste = await vendaModel.buscarPorId(id);
+            if (!vendaExiste) {
+                res.status(404).send("Venda não encontrada.");
+                return;
+            }
+            const vendaExcluida = await vendaModel.excluir(id);
+            res.status(200).json(vendaExcluida);
+        });
     }
-    const venda = req.body;
-    const vendaCriada = await vendaRepository.criar(venda);
-    res.status(201).json(vendaCriada);
-});
 
-vendaController.get("/vendas", async (_, res) => {
-    const vendas = await vendaRepository.buscar();
-    res.status(200).json(vendas);
-});
-
-vendaController.get("/vendas/:id", async (req, res) => {
-    const id = Number(req.params.id);
-    const venda = await vendaRepository.buscarPorId(id);
-    if (!venda) {
-        res.status(404).send("Venda não encontrada.");
-        return;
+    private vendaEhValida(venda: any) {
+        if (!venda.fornecedorId) return false;
+        if (!venda.clienteId) return false;
+        if (!venda.gasId) return false;
+        if (!venda.pagamentoId) return false;
+        if (venda.quantidade === undefined) return false;
+        if (venda.valorTotal === undefined) return false;
+        return true;
     }
-    res.status(200).json(venda);
-});
-
-vendaController.put("/vendas/:id", async (req, res) => {
-    const id = Number(req.params.id);
-    if (!vendaEhValida(req.body)) {
-        res.status(400).send("Dados inválidos.");
-        return;
-    }
-
-    const vendaExiste = await vendaRepository.buscarPorId(id);
-    if (!vendaExiste) {
-        res.status(404).send("Venda não encontrada.");
-        return;
-    }
-
-    const vendaAtualizada = await vendaRepository.atualizar(id);
-    res.status(200).json(vendaAtualizada);
-});
-
-vendaController.delete("/vendas/:id", async (req, res) => {
-    const id = Number(req.params.id);
-    const vendaExiste = await vendaRepository.buscarPorId(id);
-    if (!vendaExiste) {
-        res.status(404).send("Venda não encontrada.");
-        return;
-    }
-    const vendaExcluida = await vendaRepository.excluir();
-    res.status(200).json(vendaExcluida);
-});
-
-const vendaEhValida = (venda: any) => {
-    if (!venda.fornecedorId) return false;
-    if (!venda.clienteId) return false;
-    if (!venda.gasId) return false;
-    if (!venda.formaPagamentoId) return false;
-    if (venda.quantidade === undefined) return false;
-    if (venda.valorTotal === undefined) return false;
-    return true;
 }
