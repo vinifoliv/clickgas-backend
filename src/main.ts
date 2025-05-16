@@ -1,6 +1,8 @@
 require("dotenv").config();
 import express from "express";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
 
 import { ClienteController } from "./controller/ClienteController";
 import { FormaPagamentoController } from "./controller/FormaPagamentoController";
@@ -37,6 +39,8 @@ new GasFornecedorController(app, gasFornecedorModel);
 new GasController(app, gasModel);
 new AvaliacaoFornecedorController(app, avaliacaoFornecedorModel);
 new VendaController(app, vendaModel);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(process.env.PORT, () => {
     console.info(`Servidor rodando na porta ${process.env.PORT}...`);

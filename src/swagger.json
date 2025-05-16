@@ -1,0 +1,291 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ClickGás",
+        "version": "1.0.0",
+        "description": "Documentação da API do ClickGás."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000"
+        }
+    ],
+    "paths": {
+        "/clientes": {
+            "post": {
+                "summary": "Cadastra um cliente",
+                "tags": [
+                    "Clientes"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/inputCliente"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputCliente"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Consulta todos os clientes",
+                "tags": [
+                    "Clientes"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/outputCliente"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clientes/{id}": {
+            "get": {
+                "summary": "Consulta um usuário por ID",
+                "tags": [
+                    "Clientes"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputCliente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualiza um cliente",
+                "tags": [
+                    "Clientes"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/inputCliente"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputCliente"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Exclui um cliente",
+                "tags": [
+                    "Clientes"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputCliente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "error": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Dados inválidos."
+                    }
+                }
+            },
+            "inputCliente": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "Fulano da Silva"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "example@gmail.com"
+                    },
+                    "senha": {
+                        "type": "string",
+                        "example": "1234"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "example": "(11) 98765-4321"
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua dos Bobos, nº. 0"
+                    },
+                    "icone": {
+                        "type": "string",
+                        "example": "dominio.com/icone.png"
+                    }
+                }
+            },
+            "outputCliente": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Fulano da Silva"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "example@gmail.com"
+                    },
+                    "senha": {
+                        "type": "string",
+                        "example": "1234"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "example": "(11) 98765-4321"
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua dos Bobos, nº. 0"
+                    },
+                    "icone": {
+                        "type": "string",
+                        "example": "dominio.com/icone.png"
+                    },
+                    "dataCadastro": {
+                        "type": "string",
+                        "example": "2025-05-15T00:00:00Z"
+                    }
+                }
+            }
+        }
+    }
+}
