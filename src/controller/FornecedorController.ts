@@ -9,33 +9,35 @@ export class FornecedorController {
     ) {
         this.httpServer.post("/fornecedores", async (req, res) => {
             if (!this.fornecedorValido(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
 
             const fornecedor = this.montarFornecedor(req.body);
-            const fornecedorExiste = await fornecedorModel.buscarPorEmail(
+            const fornecedorExiste = await this.fornecedorModel.buscarPorEmail(
                 fornecedor.email
             );
             if (fornecedorExiste) {
-                res.status(400).send("Fornecedor já cadastrado.");
+                res.status(400).json({ message: "Fornecedor já cadastrado." });
                 return;
             }
 
-            const fornecedorCriado = await fornecedorModel.criar(fornecedor);
+            const fornecedorCriado = await this.fornecedorModel.criar(
+                fornecedor
+            );
             res.status(201).json(fornecedorCriado);
         });
 
         this.httpServer.get("/fornecedores", async (_, res) => {
-            const fornecedores = await fornecedorModel.buscar();
+            const fornecedores = await this.fornecedorModel.buscar();
             res.status(200).json(fornecedores);
         });
 
         this.httpServer.get("/fornecedores/:id", async (req, res) => {
             const id = Number(req.params.id);
-            const fornecedor = await fornecedorModel.buscarPorId(id);
+            const fornecedor = await this.fornecedorModel.buscarPorId(id);
             if (!fornecedor) {
-                res.status(404).send("Fornecedor não encontrado.");
+                res.status(404).json({ message: "Fornecedor não encontrado." });
                 return;
             }
             res.status(200).json(fornecedor);
@@ -43,27 +45,26 @@ export class FornecedorController {
 
         this.httpServer.put("/fornecedores/:id", async (req, res) => {
             if (!this.fornecedorValido(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
 
             const id = Number(req.params.id);
             const fornecedor = this.montarFornecedor(req.body);
-            const fornecedorExiste = await fornecedorModel.buscarPorId(id);
+            const fornecedorExiste = await this.fornecedorModel.buscarPorId(id);
             if (!fornecedorExiste) {
-                res.status(404).send("Fornecedor não encontrado.");
+                res.status(404).json({ message: "Fornecedor não encontrado." });
                 return;
             }
 
-            const fornecedorMesmoEmail = await fornecedorModel.buscarPorEmail(
-                fornecedor.email
-            );
+            const fornecedorMesmoEmail =
+                await this.fornecedorModel.buscarPorEmail(fornecedor.email);
             if (fornecedorMesmoEmail && fornecedorMesmoEmail.id !== id) {
-                res.status(422).send("E-mail já cadastrado.");
+                res.status(422).json({ message: "E-mail já cadastrado." });
                 return;
             }
 
-            const fornecedorAlterado = await fornecedorModel.alterar(
+            const fornecedorAlterado = await this.fornecedorModel.alterar(
                 id,
                 fornecedor
             );
@@ -72,13 +73,13 @@ export class FornecedorController {
 
         this.httpServer.delete("/fornecedores/:id", async (req, res) => {
             const id = Number(req.params.id);
-            const fornecedorExiste = await fornecedorModel.buscarPorId(id);
+            const fornecedorExiste = await this.fornecedorModel.buscarPorId(id);
             if (!fornecedorExiste) {
-                res.status(404).send("Fornecedor não encontrado.");
+                res.status(404).json({ message: "Fornecedor não encontrado." });
                 return;
             }
 
-            const fornecedorExcluido = await fornecedorModel.excluir(id);
+            const fornecedorExcluido = await this.fornecedorModel.excluir(id);
             res.status(200).json(fornecedorExcluido);
         });
     }

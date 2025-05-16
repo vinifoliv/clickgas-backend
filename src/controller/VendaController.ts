@@ -8,7 +8,7 @@ export class VendaController {
     ) {
         this.httpServer.post("/vendas", async (req, res) => {
             if (!this.vendaEhValida(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
             const venda = req.body;
@@ -25,7 +25,7 @@ export class VendaController {
             const id = Number(req.params.id);
             const venda = await this.vendaModel.buscarPorId(id);
             if (!venda) {
-                res.status(404).send("Venda não encontrada.");
+                res.status(404).json({ message: "Venda não encontrada." });
                 return;
             }
             res.status(200).json(venda);
@@ -34,13 +34,13 @@ export class VendaController {
         this.httpServer.put("/vendas/:id", async (req, res) => {
             const id = Number(req.params.id);
             if (!this.vendaEhValida(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
 
             const vendaExiste = await this.vendaModel.buscarPorId(id);
             if (!vendaExiste) {
-                res.status(404).send("Venda não encontrada.");
+                res.status(404).json({ message: "Venda não encontrada." });
                 return;
             }
 
@@ -55,7 +55,7 @@ export class VendaController {
             const id = Number(req.params.id);
             const vendaExiste = await vendaModel.buscarPorId(id);
             if (!vendaExiste) {
-                res.status(404).send("Venda não encontrada.");
+                res.status(404).json({ message: "Venda não encontrada." });
                 return;
             }
             const vendaExcluida = await vendaModel.excluir(id);

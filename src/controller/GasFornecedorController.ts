@@ -8,7 +8,7 @@ export class GasFornecedorController {
     ) {
         this.httpServer.post("/gas-fornecedores", async (req, res) => {
             if (!this.gasFornecedorEValido(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
             const gasFornecedor = req.body;
@@ -27,7 +27,9 @@ export class GasFornecedorController {
             const id = Number(req.params.id);
             const gasFornecedor = await this.gasFornecedorModel.buscarPorId(id);
             if (!gasFornecedor) {
-                res.status(404).send("Gás do fornecedor não encontrado.");
+                res.status(404).json({
+                    message: "Gás do fornecedor não encontrado.",
+                });
                 return;
             }
 
@@ -37,14 +39,16 @@ export class GasFornecedorController {
         this.httpServer.put("/gas-fornecedores/:id", async (req, res) => {
             const id = Number(req.params.id);
             if (!this.gasFornecedorEValido(req.body)) {
-                res.status(400).send("Dados inválidos");
+                res.status(400).json({ message: "Dados inválidos" });
                 return;
             }
 
             const gasFornecedorExiste =
                 await this.gasFornecedorModel.buscarPorId(id);
             if (!gasFornecedorExiste) {
-                res.status(404).send("Gás do fornecedor não encontrado.");
+                res.status(404).json({
+                    message: "Gás do fornecedor não encontrado.",
+                });
                 return;
             }
 
@@ -59,7 +63,9 @@ export class GasFornecedorController {
             const gasFornecedorExiste =
                 await this.gasFornecedorModel.buscarPorId(id);
             if (!gasFornecedorExiste) {
-                res.status(404).send("Gás do fornecedor não encontrado.");
+                res.status(404).json({
+                    message: "Gás do fornecedor não encontrado.",
+                });
                 return;
             }
 

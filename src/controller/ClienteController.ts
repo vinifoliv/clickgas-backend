@@ -9,7 +9,7 @@ export class ClienteController {
     ) {
         this.httpServer.post("/clientes", async (req, res) => {
             if (!this.clienteValido(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
 
@@ -18,7 +18,7 @@ export class ClienteController {
                 cliente.email
             );
             if (clienteExiste) {
-                res.status(400).send("Cliente já cadastrado .");
+                res.status(400).json({ message: "Cliente já cadastrado ." });
                 return;
             }
 
@@ -30,7 +30,7 @@ export class ClienteController {
             const id = Number(req.params.id);
             const cliente = await this.clienteModel.buscarPorId(id);
             if (!cliente) {
-                res.status(404).send("Cliente não encontrado.");
+                res.status(404).json({ message: "Cliente não encontrado." });
                 return;
             }
             res.status(200).json(cliente);
@@ -43,7 +43,7 @@ export class ClienteController {
 
         this.httpServer.put("/clientes/:id", async (req, res) => {
             if (!this.clienteValido(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
 
@@ -51,7 +51,7 @@ export class ClienteController {
             const cliente = this.montarCliente(req.body);
             const clienteExiste = await this.clienteModel.buscarPorId(id);
             if (!clienteExiste) {
-                res.status(404).send("Cliente não encontrado.");
+                res.status(404).json({ message: "Cliente não encontrado." });
                 return;
             }
 
@@ -59,7 +59,7 @@ export class ClienteController {
                 cliente.email
             );
             if (existeEmail && existeEmail.id !== id) {
-                res.status(422).send("E-mail já cadastrado.");
+                res.status(422).json({ message: "E-mail já cadastrado." });
                 return;
             }
 
@@ -74,7 +74,7 @@ export class ClienteController {
             const id = Number(req.params.id);
             const clienteExiste = await this.clienteModel.buscarPorId(id);
             if (!clienteExiste) {
-                res.status(404).send("Cliente não encontrado.");
+                res.status(404).json({ message: "Cliente não encontrado." });
                 return;
             }
 

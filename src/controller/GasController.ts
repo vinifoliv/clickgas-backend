@@ -9,14 +9,14 @@ export class GasController {
     ) {
         this.httpServer.post("/gas", async (req, res) => {
             if (!this.gasValido(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
 
             const gas = this.montarGas(req.body);
             const gasExiste = await this.gasModel.buscarPorPeso(gas.peso);
             if (gasExiste) {
-                res.status(400).send("Gás já cadastrado.");
+                res.status(400).json({ message: "Gás já cadastrado." });
                 return;
             }
 
@@ -33,7 +33,7 @@ export class GasController {
             const id = Number(req.params.id);
             const gas = await this.gasModel.buscarPorId(id);
             if (!gas) {
-                res.status(404).send("Gás não encontrado.");
+                res.status(404).json({ message: "Gás não encontrado." });
                 return;
             }
             res.status(200).json(gas);
@@ -41,7 +41,7 @@ export class GasController {
 
         this.httpServer.put("/gas/:id", async (req, res) => {
             if (!this.gasValido(req.body)) {
-                res.status(400).send("Dados inválidos.");
+                res.status(400).json({ message: "Dados inválidos." });
                 return;
             }
 
@@ -49,13 +49,13 @@ export class GasController {
             const gas = this.montarGas(req.body);
             const gasExiste = await this.gasModel.buscarPorId(id);
             if (!gasExiste) {
-                res.status(404).send("Gás não encontrado.");
+                res.status(404).json({ message: "Gás não encontrado." });
                 return;
             }
 
             const gasMesmoPeso = await gasModel.buscarPorPeso(gas.peso);
             if (gasMesmoPeso && gasMesmoPeso.id !== id) {
-                res.status(422).send("Gás já cadastrado.");
+                res.status(422).json({ message: "Gás já cadastrado." });
                 return;
             }
 
@@ -67,7 +67,7 @@ export class GasController {
             const id = Number(req.params.id);
             const gasExiste = await this.gasModel.buscarPorId(id);
             if (!gasExiste) {
-                res.status(404).send("Gás não encontrado.");
+                res.status(404).json({ message: "Gás não encontrado." });
                 return;
             }
 
