@@ -11,6 +11,185 @@
         }
     ],
     "paths": {
+        "/avaliacoes-fornecedor": {
+            "post": {
+                "summary": "Cadastra uma avaliação de fornecedor",
+                "tags": [
+                    "Avaliações do fornecedor"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/inputAvaliacaoFornecedor"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputAvaliacaoFornecedor"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Consulta todas as avaliações do fornecedor",
+                "tags": [
+                    "Avaliações do fornecedor"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/outputAvaliacaoFornecedor"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/avaliacoes-fornecedor/{id}": {
+            "get": {
+                "summary": "Consulta uma avaliação de fornecedor por ID",
+                "tags": [
+                    "Avaliações do fornecedor"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputAvaliacaoFornecedor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualiza uma avaliação de fornecedor",
+                "tags": [
+                    "Avaliações do fornecedor"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/inputAvaliacaoFornecedor"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputAvaliacaoFornecedor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Consulta uma avaliação de fornecedor por ID",
+                "tags": [
+                    "Avaliações do fornecedor"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/outputAvaliacaoFornecedor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/clientes": {
             "post": {
                 "summary": "Cadastra um cliente",
@@ -217,6 +396,44 @@
                     "message": {
                         "type": "string",
                         "example": "Dados inválidos."
+                    }
+                }
+            },
+            "inputAvaliacaoFornecedor": {
+                "type": "object",
+                "properties": {
+                    "fornecedorId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "clienteId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "avaliacao": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                }
+            },
+            "outputAvaliacaoFornecedor": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "fornecedorId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "clienteId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "avaliacao": {
+                        "type": "integer",
+                        "example": 1
                     }
                 }
             },
